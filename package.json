@@ -1,0 +1,24 @@
+{
+  "name": "express-permissions",
+  "version": "0.0.0",
+  "description": "Express Middleware Permissions system",
+  "main": "lib/express-permissions.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "permissions",
+    "express"
+  ],
+  "author": "Adam Laycock",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "coffee-script": "^1.9.2",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-coffee": "^0.13.0",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.2.5"
+  }
+}
