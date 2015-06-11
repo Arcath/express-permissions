@@ -114,3 +114,12 @@ describe 'ExpressPermissions', ->
         expect(response._status).to.equal 403
         done()
       , 10)
+
+
+  describe 'Layer', ->
+    it 'should match /layer/:param', ->
+      ExpressPermissions.add(app, '/layer/:param', false)
+
+      request.originalUrl = '/layer/foo'
+
+      expect(ExpressPermissions.check(request, response)).to.equal false

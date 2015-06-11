@@ -1,5 +1,7 @@
 path = require 'path'
 
+Layer = require path.join(__dirname, '..', 'node_modules', 'express', 'lib', 'router', 'layer')
+
 ExpressPermissions =
   middleware: ->
     (request, response, next) ->
@@ -45,12 +47,17 @@ ExpressPermissions =
         else
           return check.value.call(request.app, request, response)
 
-  getRoute: (app, route) ->
-    switch typeof app.permissions[route]
+  getRoute: (app, url) ->
+    routes = Object.keys(app.permissions)
+    for route in routes
+      layer = new Layer(route, {}, ->)
+      return route if layer.match(url)
+
+    switch typeof app.permissions[url]
       when 'undefined'
-        return @getRoute(app, path.join(route, '..').replace(/\\/g, '/'))
+        return @getRoute(app, path.join(url, '..').replace(/\\/g, '/'))
       when 'object'
-        return route
+        return url
 
   checkObject: (object, locals) ->
     for key in Object.keys(object)

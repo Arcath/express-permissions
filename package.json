@@ -12,6 +12,9 @@
   ],
   "author": "Adam Laycock",
   "license": "MIT",
+  "dependencies": {
+    "express": "^4.12.4"
+  },
   "devDependencies": {
     "chai": "^2.3.0",
     "coffee-script": "^1.9.2",
@@ -19,6 +22,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-coffee": "^0.13.0",
     "grunt-mocha-test": "^0.12.7",
+    "grunt-shell": "^1.1.2",
     "mocha": "^2.2.5"
   }
 }

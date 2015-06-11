@@ -1,6 +1,7 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-mocha-test')
+  grunt.loadNpmTasks('grunt-shell')
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json'),
@@ -24,6 +25,14 @@ module.exports = (grunt) ->
         },
         src: ['tests/*.coffee']
       }
+    },
+
+    shell: {
+        testapp: {
+            command: 'node ./tests/app/app.js'
+        }
     }
 
-  grunt.registerTask 'test', ['coffee', 'mochaTest']
+
+  grunt.registerTask 'test', ['coffee:source', 'mochaTest']
+  grunt.registerTask 'testapp', ['coffee', 'shell:testapp']
