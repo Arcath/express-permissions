@@ -88,6 +88,12 @@ describe 'ExpressPermissions', ->
 
       func(request, response, -> )
 
+    it 'should work asynchronously', (done) ->
+      request.originalUrl = '/promise'
+
+      func(request, response, done)
+
+
     it 'should cause an error 403', ->
       ExpressPermissions.add(app, '/boolean/false', false)
 

@@ -9,23 +9,19 @@ ExpressPermissions =
       switch typeof check
         when 'object'
           check.then (value) ->
-            if value
-              next()
-            else
-              response.status(403)
-              if request.app.permissionDenied
-                request.app.permissionDenied.call(request.app, request, response)
-              else
-                response.end()
+            ExpressPermissions.produceError(value, request, response, next)
         else
-          if check
-            next()
-          else
-            response.status(403)
-            if request.app.permissionDenied
-              request.app.permissionDenied.call(request.app, request, response)
-            else
-              response.end()
+          ExpressPermissions.produceError(check, request, response, next)
+
+  produceError: (value, request, response, next) ->
+    if value
+      next()
+    else
+      response.status(403)
+      if request.app.permissionDenied
+        request.app.permissionDenied.call(request.app, request, response)
+      else
+        response.end()
 
   add: (app, route, value, promise = false) ->
     app.permissions ||= {}
