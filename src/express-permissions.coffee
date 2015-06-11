@@ -32,7 +32,9 @@ ExpressPermissions =
 
 
   check: (request, response) ->
-    check = request.app.permissions[@getRoute(request.app, request.originalUrl)]
+    foundRoute = @getRoute(request.app, request.originalUrl)
+    request.params = foundRoute.params
+    check = request.app.permissions[foundRoute.route]
     switch check.typeof
       when 'boolean'
         return check.value
@@ -51,13 +53,16 @@ ExpressPermissions =
     routes = Object.keys(app.permissions)
     for route in routes
       layer = new Layer(route, {}, ->)
-      return route if layer.match(url)
+      if layer.match(url)
+        object = {
+          route: route
+          params: layer.params
+        }
+        return object
 
     switch typeof app.permissions[url]
       when 'undefined'
         return @getRoute(app, path.join(url, '..').replace(/\\/g, '/'))
-      when 'object'
-        return url
 
   checkObject: (object, locals) ->
     for key in Object.keys(object)

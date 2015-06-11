@@ -123,3 +123,12 @@ describe 'ExpressPermissions', ->
       request.originalUrl = '/layer/foo'
 
       expect(ExpressPermissions.check(request, response)).to.equal false
+
+    it 'should supply the params', ->
+      ExpressPermissions.add(app, '/params/:supplied', (request, response) ->
+        (request.params.supplied == 'foo')
+      )
+
+      request.originalUrl = '/params/foo'
+
+      expect(ExpressPermissions.check(request, response)).to.equal true
