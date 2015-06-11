@@ -115,6 +115,13 @@ describe 'ExpressPermissions', ->
         done()
       , 10)
 
+    it 'should run your error function if it exists', (done) ->
+      app.permissionDenied = (request, response) ->
+        done()
+
+      func(request, response, ->
+        throw 'Test Failed'
+      )
 
   describe 'Layer', ->
     it 'should match /layer/:param', ->

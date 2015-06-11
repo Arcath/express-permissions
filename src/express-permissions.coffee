@@ -12,13 +12,20 @@ ExpressPermissions =
             if value
               next()
             else
-              response.status(403).end()
-
+              response.status(403)
+              if request.app.permissionDenied
+                request.app.permissionDenied.call(request.app, request, response)
+              else
+                response.end()
         else
           if check
             next()
           else
-            response.status(403).end()
+            response.status(403)
+            if request.app.permissionDenied
+              request.app.permissionDenied.call(request.app, request, response)
+            else
+              response.end()
 
   add: (app, route, value, promise = false) ->
     app.permissions ||= {}
