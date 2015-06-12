@@ -1,6 +1,6 @@
 path = require 'path'
 
-Layer = require path.join(__dirname, '..', 'node_modules', 'express', 'lib', 'router', 'layer')
+Layer = require path.join(require.resolve('express'), '..', 'lib', 'router', 'layer')
 
 ExpressPermissions =
   middleware: ->
