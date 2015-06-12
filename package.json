@@ -10,6 +10,13 @@
     "permissions",
     "express"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Arcath/express-permissions"
+  },
+  "bugs":{
+    "url": "https://github.com/Arcath/express-permissions/issues"
+  },
   "author": "Adam Laycock",
   "license": "MIT",
   "dependencies": {

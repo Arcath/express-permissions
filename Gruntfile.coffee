@@ -31,8 +31,13 @@ module.exports = (grunt) ->
         testapp: {
             command: 'node ./tests/app/app.js'
         }
+
+        publish: {
+          command: 'npm publish'
+        }
     }
 
 
   grunt.registerTask 'test', ['coffee:source', 'mochaTest']
   grunt.registerTask 'testapp', ['coffee', 'shell:testapp']
+  grunt.registerTask 'publish', ['coffee', 'shell:publish']
