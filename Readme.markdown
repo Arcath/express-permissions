@@ -13,7 +13,7 @@ npm install express-permissions --save
 Require express-permissions and load it as middleware.
 
 ```javascript
-ExpressPermissions = require(path.join(__dirname, '..', '..'))
+ExpressPermissions = require('express-permissions')
 
 app.use(ExpressPermissions.middleware())
 ```
