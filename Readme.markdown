@@ -1,5 +1,7 @@
 # express-permissions
 
+[![Build Status](https://travis-ci.org/Arcath/express-permissions.svg?branch=master)](https://travis-ci.org/Arcath/express-permissions)
+
 Easy to use permissions system for Express
 
 ## Install
