@@ -71,6 +71,7 @@ ExpressPermissions =
     for key in Object.keys(object)
       switch typeof object[key]
         when 'object'
+          return false if typeof locals[key] is 'undefined'
           return @checkObject(object[key], locals[key])
         else
           return (object[key] == locals[key])

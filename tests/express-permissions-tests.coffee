@@ -53,6 +53,21 @@ describe 'ExpressPermissions', ->
 
       expect(ExpressPermissions.check(request, response)).to.equal true
 
+    it 'should return false if keys dont exist', ->
+
+      ExpressPermissions.add(app, '/object/undefined', {widget: {bar: 'widget'}})
+
+      request.originalUrl = '/object/undefined'
+
+      expect(ExpressPermissions.check(request, response)).to.equal false
+
+      ExpressPermissions.add(app, '/object/undefined2', {missing: 'foo'})
+
+      request.originalUrl = '/object/undefined2'
+
+      expect(ExpressPermissions.check(request, response)).to.equal false
+
+
     it 'should create a function check', ->
       ExpressPermissions.add(app, '/function', (request, response) -> true)
 
