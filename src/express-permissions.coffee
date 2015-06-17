@@ -23,14 +23,15 @@ ExpressPermissions =
       else
         response.end()
 
-  add: (app, route, value, promise = false) ->
+  add: (app, route, value, options = {}) ->
+    options.promise ||= false
     app.permissions ||= {}
     throw "#{route} already has permissions" unless typeof app.permissions[route] is 'undefined'
     app.permissions[route] = {
       typeof: typeof value
       route: route
       value: value
-      promise: promise
+      promise: options.promise
     }
 
 

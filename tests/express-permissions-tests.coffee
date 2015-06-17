@@ -80,7 +80,7 @@ describe 'ExpressPermissions', ->
       ExpressPermissions.add(app, '/promise', (request, response, resolve, reject) ->
         expect(response.locals.foo.bar).to.equal 'widget'
         resolve(true)
-      , true)
+      , {promise: true})
 
       expect(app.permissions['/promise'].promise).to.equal true
 
@@ -123,7 +123,7 @@ describe 'ExpressPermissions', ->
     it 'should cause an error 403 by Promise', (done) ->
       ExpressPermissions.add(app, '/promise/false', (request, response, resolve, reject) ->
         resolve(false)
-      , true)
+      , {promise: true})
 
       request.originalUrl = '/promise/false'
 
