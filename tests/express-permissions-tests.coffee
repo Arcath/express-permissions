@@ -91,6 +91,12 @@ describe 'ExpressPermissions', ->
         expect(result).to.equal true
         done()
 
+  describe 'Options', ->
+    it 'should default promise to false', ->
+      ExpressPermissions.add(app, '/options/promiseIsFalse', true)
+
+      expect(app.permissions['/options/promiseIsFalse'].promise).to.equal false
+
   describe 'Middleware', ->
     [func] = []
 
