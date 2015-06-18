@@ -27,8 +27,8 @@ describe 'ExpressPermissions', ->
     it 'should add permissions to app', ->
       ExpressPermissions.add(app, '/', true)
 
-      expect(app.permissions['/'].value).to.equal true
-      expect(app.permissions['/'].promise).to.equal false
+      expect(app.permissions.where({route: '/'})[0].value).to.equal true
+      expect(app.permissions.where({route: '/'})[0].promise).to.equal false
 
     it 'should throw an error if you try to double define permissions', ->
       expect(-> ExpressPermissions.add(app, '/', true)).to.throw '/ already has permissions'
@@ -82,7 +82,7 @@ describe 'ExpressPermissions', ->
         resolve(true)
       , {promise: true})
 
-      expect(app.permissions['/promise'].promise).to.equal true
+      expect(app.permissions.where({route: '/promise'})[0].promise).to.equal true
 
     it 'should run the promise', (done) ->
       request.originalUrl = '/promise'
@@ -95,7 +95,7 @@ describe 'ExpressPermissions', ->
     it 'should default promise to false', ->
       ExpressPermissions.add(app, '/options/promiseIsFalse', true)
 
-      expect(app.permissions['/options/promiseIsFalse'].promise).to.equal false
+      expect(app.permissions.where({route: '/options/promiseIsFalse'})[0].promise).to.equal false
 
   describe 'Middleware', ->
     [func] = []

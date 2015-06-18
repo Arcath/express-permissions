@@ -21,7 +21,8 @@
   "author": "Adam Laycock",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.12.4"
+    "express": "^4.12.4",
+    "sodb": "0.0.1"
   },
   "devDependencies": {
     "chai": "^2.3.0",

@@ -1,6 +1,7 @@
 path = require 'path'
 
 Layer = require path.join(require.resolve('express'), '..', 'lib', 'router', 'layer')
+sodb = require 'sodb'
 
 ExpressPermissions =
   middleware: ->
@@ -25,9 +26,8 @@ ExpressPermissions =
 
   add: (app, route, value, options = {}) ->
     options.promise ||= false
-    app.permissions ||= {}
-    throw "#{route} already has permissions" unless typeof app.permissions[route] is 'undefined'
-    app.permissions[route] = {
+    app.permissions ||= new sodb()
+    app.permissions.add {
       typeof: typeof value
       route: route
       value: value
@@ -38,7 +38,7 @@ ExpressPermissions =
   check: (request, response) ->
     foundRoute = @getRoute(request.app, request.originalUrl)
     request.params = foundRoute.params
-    check = request.app.permissions[foundRoute.route]
+    check = request.app.permissions.where({route: foundRoute.route})[0]
     switch check.typeof
       when 'boolean'
         return check.value
@@ -54,7 +54,8 @@ ExpressPermissions =
           return check.value.call(request.app, request, response)
 
   getRoute: (app, url) ->
-    routes = Object.keys(app.permissions)
+    routes = app.permissions.where().map (value) ->
+      return value.route
     for route in routes
       layer = new Layer(route, {}, ->)
       if layer.match(url)
@@ -64,7 +65,7 @@ ExpressPermissions =
         }
         return object
 
-    switch typeof app.permissions[url]
+    switch typeof app.permissions.where({route: url})[0]
       when 'undefined'
         return @getRoute(app, path.join(url, '..').replace(/\\/g, '/'))
 
