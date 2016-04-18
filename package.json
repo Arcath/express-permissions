@@ -1,6 +1,6 @@
 {
   "name": "express-permissions",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Express Middleware Permissions system",
   "main": "lib/express-permissions.js",
   "scripts": {
