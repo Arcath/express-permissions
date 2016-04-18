@@ -4,7 +4,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-mocha-test')
   grunt.loadNpmTasks('grunt-shell')
-  grunt.loadNpmTasks('grunt-coveralls')
 
   grunt.initConfig
     pkg: grunt.file.readJSON('package.json'),
@@ -30,12 +29,12 @@ module.exports = (grunt) ->
       },
       coverage: {
         options: {
-          reporter: 'mocha-lcov-reporter',
+          reporter: 'mocha-lcov-reporter'
           require: 'coffee-script/register'
           captureFile: 'lib-cov/lcov.txt'
           quiet: true
         },
-        src: ['lib-cov/*.js']
+        src: ['lib-cov/tests/*-tests.coffee']
       }
     },
 
@@ -49,18 +48,16 @@ module.exports = (grunt) ->
         }
 
         jscover: {
-          command: "#{path.join(__dirname, 'node_modules', '.bin', 'jscover')} lib lib-cov"
+          command: "#{path.join(__dirname, 'node_modules', '.bin', 'jscover')} --format=LCOV lib lib-cov && cp -r ./tests ./lib-cov/tests"
         }
-    }
 
-    coveralls: {
-      lcov:{
-        src: 'lib-cov/lcov.txt'
-      }
+        coveralls: {
+          command: "cd ./lib-cov && cat ./lcov.txt | #{path.join(__dirname, 'node_modules', '.bin', 'coveralls')}"
+        }
     }
 
 
   grunt.registerTask 'test', ['coffee:source', 'mochaTest:test']
   grunt.registerTask 'testapp', ['coffee', 'shell:testapp']
-  grunt.registerTask 'testci', ['coffee:source', 'shell:jscover', 'mochaTest']
+  grunt.registerTask 'testci', ['coffee:source', 'shell:jscover', 'mochaTest', 'shell:coveralls']
   grunt.registerTask 'publish', ['coffee', 'shell:publish']

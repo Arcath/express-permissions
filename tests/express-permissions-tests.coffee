@@ -1,7 +1,10 @@
 path = require 'path'
 expect = require('chai').expect
 
-ExpressPermissions = require path.join(__dirname, '..')
+if /lib-cov/.test(__dirname)
+  ExpressPermissions = require path.join(__dirname, '..', 'express-permissions.js')
+else
+  ExpressPermissions = require path.join(__dirname, '..')
 
 app = {}
 request = {}
@@ -30,13 +33,10 @@ describe 'ExpressPermissions', ->
       expect(app.permissions.where({route: '/'})[0].value).to.equal true
       expect(app.permissions.where({route: '/'})[0].promise).to.equal false
 
-    it 'should throw an error if you try to double define permissions', ->
-      expect(-> ExpressPermissions.add(app, '/', true)).to.throw '/ already has permissions'
-
     it 'should travel upwards', ->
       request.originalUrl = '/some/deep/route/with/no/permissions'
 
-      expect(ExpressPermissions.check(request, response)).to.equal true
+      expect(ExpressPermissions.check(request, response)[0]).to.equal true
 
   describe 'Synchronous', ->
     it 'should create a boolean check', ->
@@ -44,14 +44,14 @@ describe 'ExpressPermissions', ->
 
       request.originalUrl = '/boolean'
 
-      expect(ExpressPermissions.check(request, response)).to.equal true
+      expect(ExpressPermissions.check(request, response)[0]).to.equal true
 
     it 'should create a object check', ->
       ExpressPermissions.add(app, '/object', {foo: {bar: 'widget'}})
 
       request.originalUrl = '/object'
 
-      expect(ExpressPermissions.check(request, response)).to.equal true
+      expect(ExpressPermissions.check(request, response)[0]).to.equal true
 
     it 'should return false if keys dont exist', ->
 
@@ -59,13 +59,13 @@ describe 'ExpressPermissions', ->
 
       request.originalUrl = '/object/undefined'
 
-      expect(ExpressPermissions.check(request, response)).to.equal false
+      expect(ExpressPermissions.check(request, response)[0]).to.equal false
 
       ExpressPermissions.add(app, '/object/undefined2', {missing: 'foo'})
 
       request.originalUrl = '/object/undefined2'
 
-      expect(ExpressPermissions.check(request, response)).to.equal false
+      expect(ExpressPermissions.check(request, response)[0]).to.equal false
 
 
     it 'should create a function check', ->
@@ -73,7 +73,7 @@ describe 'ExpressPermissions', ->
 
       request.originalUrl = '/function'
 
-      expect(ExpressPermissions.check(request, response)).to.equal true
+      expect(ExpressPermissions.check(request, response)[0]).to.equal true
 
   describe 'Asynchronous', ->
     it 'should accept a promise flag', ->
@@ -87,7 +87,7 @@ describe 'ExpressPermissions', ->
     it 'should run the promise', (done) ->
       request.originalUrl = '/promise'
 
-      ExpressPermissions.check(request, response).then (result) ->
+      ExpressPermissions.check(request, response)[0].then (result) ->
         expect(result).to.equal true
         done()
 
@@ -150,13 +150,25 @@ describe 'ExpressPermissions', ->
         throw 'Test Failed'
       )
 
+    it 'should use a custom denied error', (done) ->
+      ExpressPermissions.add(app, '/custom/error', false, {denied: (request, response) -> done()})
+
+      request.originalUrl = '/custom/error'
+
+      app.permissionDenied = (request, response) ->
+        throw 'Test Failed 1'
+
+      func(request, response, ->
+        throw 'Test Failed 2'
+      )
+
   describe 'Layer', ->
     it 'should match /layer/:param', ->
       ExpressPermissions.add(app, '/layer/:param', false)
 
       request.originalUrl = '/layer/foo'
 
-      expect(ExpressPermissions.check(request, response)).to.equal false
+      expect(ExpressPermissions.check(request, response)[0]).to.equal false
 
     it 'should supply the params', ->
       ExpressPermissions.add(app, '/params/:supplied', (request, response) ->
@@ -165,4 +177,4 @@ describe 'ExpressPermissions', ->
 
       request.originalUrl = '/params/foo'
 
-      expect(ExpressPermissions.check(request, response)).to.equal true
+      expect(ExpressPermissions.check(request, response)[0]).to.equal true
